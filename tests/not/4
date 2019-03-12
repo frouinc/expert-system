@@ -1,0 +1,6 @@
+B + !C => A 
+
+#With =BC, A should be false. 
+=BC
+
+?A 

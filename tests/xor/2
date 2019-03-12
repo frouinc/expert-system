@@ -1,0 +1,8 @@
+B + C => A 
+D ^ E => B 
+B => C 
+
+#With =D, A should be true. 
+=D
+
+?A 
