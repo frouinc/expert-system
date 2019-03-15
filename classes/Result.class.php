@@ -6,6 +6,10 @@ class Result {
 	function __construct($str = "") {
 		$arr = str_split($str);
 
+		if (!$this->check($str)) {
+			throw new Exception("Syntax error in '$str'");
+		}
+
 		$i = 0;
 		$and = false;
 		$count = count($arr);
@@ -43,6 +47,42 @@ class Result {
 
 			$i++;
 		}
+	}
+
+	private function check($str) {
+		$array = str_split($str);
+		$i = 0;
+		$size = count($array);
+
+		$variableCount = 0;
+		$signCount = 0;
+
+		foreach ($array as $key => $char) {
+			// echo $key . " => " . $char . PHP_EOL;
+			if ($char == "+") {
+				if ($key + 1 >= $size) {
+					throw new Exception("Syntax error sign at the end of expression");
+				}
+				if ($signCount != $variableCount - 1) {
+					throw new Exception("Syntax error too many signs");
+				}
+				$signCount++;
+			} else if (ctype_upper($char)) {
+				if ($variableCount > $signCount) {
+					throw new Exception("Syntax error too many variables");
+				}
+				$variableCount++;
+			} else if ($char == "(") {
+				if ($key < $size - 1 && $array[$key + 1] == "+") {
+					throw new Exception("Syntax error invalid parenthesis");
+				}
+			} else if ($char == ")") {
+				if ($key > 0 && $array[$key - 1] == "+") {
+					throw new Exception("Syntax error invalid parenthesis");
+				}
+			}
+		}
+		return (true);
 	}
 
 	// Work for multiple elements without AND

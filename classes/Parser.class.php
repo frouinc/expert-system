@@ -42,7 +42,17 @@ class Parser {
 		$this->valuesParsed = false;
 		$this->displayParsed = false;
 
+		if (!file_exists($filename)) {
+			throw new Exception("$filename does not exist");
+		}
+		if (is_dir($filename)) {
+			throw new Exception("$filename is a directory");
+		}
 		$handle = fopen($filename, "r");
+		if (!$handle) {
+			throw new Exception("$filename could not be opened");
+		}
+
 		if ($handle) {
 			$lineN = 1;
 
@@ -62,21 +72,13 @@ class Parser {
 		}
 	}
 
-	public function parseText($text) {
-		$this->valuesParsed = false;
-		$this->displayParsed = false;
+	private function checkRule($line) {
+		$line = explode("#", $line)[0];
+		$line = preg_replace('/\s+/', '', $line);
 
-		$lines = preg_split('/\r\n|\r|\n/', $string);
-		$lineN = 1;
-		try {
-			foreach ($lines as $line) {
-				parseLine($line);
-				$lineN++;
-			}
-		} catch (Exception $e) {
-			echo "Line " . $lineN . PHP_EOL;
-			throw $e;
-		}
+		$array = str_split($line);
+
+		return (true);
 	}
 
 	private function parseLine($line) {
